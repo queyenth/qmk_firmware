@@ -18,7 +18,6 @@
         "caps_lock": "A15",
         "num_lock": "B4",
         "scroll_lock": "B3",
-        "compose": "C13",
         "on_state": 0
     },
     "features": {
