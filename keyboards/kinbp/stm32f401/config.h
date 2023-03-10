@@ -17,4 +17,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#define LED4_PIN C13
+#define KPD_LED_PIN C13
