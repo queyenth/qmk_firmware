@@ -1,0 +1,8 @@
+#pragma once
+
+#define TAPPING_TERM 175
+#define IGNORE_MOD_TAP_INTERRUPT
+//#define PERMISSIVE_HOLD
+#define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
+
+#define COMBO_COUNT 1

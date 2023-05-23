@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Jesse Estes (@jestes5111)
+Copyright 2023 DmNosachev
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#define EE_HANDS
-#define RGBLIGHT_SPLIT
-#define RGBLIGHT_SLEEP
-#define ENABLE_COMPILE_KEYCODE
+#define LSPO_KEYS KC_LSFT, KC_TRNS, KC_LBRC
+#define RSPC_KEYS KC_RSFT, KC_TRNS, KC_RBRC
