@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define EE_HANDS
 
 #define SPLIT_USB_DETECT
+#define SPLIT_OLED_ENABLE
 
 //#define QUICK_TAP_TERM 0
 #define TAPPING_TERM 175
@@ -52,6 +53,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_SAT_STEP 17
 #define RGBLIGHT_VAL_STEP 17
 #define RGBLIGHT_SLEEP
+#define RGBLIGHT_LAYERS
 
 // Underglow
 /*

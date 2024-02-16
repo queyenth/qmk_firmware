@@ -1,5 +1,5 @@
 BOOTMAGIC_ENABLE = no       # Enable Bootmagic Lite
-MOUSEKEY_ENABLE = yes        # Mouse keys
+MOUSEKEY_ENABLE = no        # Mouse keys
 EXTRAKEY_ENABLE = yes        # Audio control and System control
 CONSOLE_ENABLE = no         # Console for debug
 COMMAND_ENABLE = no         # Commands for debug and configuration
@@ -9,19 +9,20 @@ AUDIO_ENABLE = no           # Audio output
 RGBLIGHT_ENABLE = yes       # Enable WS2812 RGB underlight.
 SWAP_HANDS_ENABLE = no      # Enable one-hand typing
 OLED_ENABLE= yes     # OLED display
-RAW_ENABLE = yes
+RAW_ENABLE = no
 LTO_ENABLE = yes
 CAPS_WORD_ENABLE = yes
 GRAVE_ESC_ENABLE = no
 MAGIC_ENABLE = no
 COMBO_ENABLE = no
+REPEAT_KEY_ENABLE = yes
 
 # If you want to change the display of OLED, you need to change here
-SRC +=  ./lib/rgb_state_reader.c \
-        ./lib/layer_state_reader.c \
+SRC +=  ./lib/layer_state_reader.c \
         ./lib/logo_reader.c \
-        ./lib/keylogger.c \
 	./lib/callum.c \
+        ./lib/rgb_state_reader.c \
+       #./lib/keylogger.c \
         # ./lib/host_led_state_reader.c \
         # ./lib/mode_icon_reader.c \
         # ./lib/timelogger.c \
