@@ -18,5 +18,4 @@ TAP_DANCE_ENABLE = no
 COMBO_ENABLE = yes
 REPEAT_KEY_ENABLE = yes
 
-SRC += ./lib/callum.c \
-       ./lib/yako.c
+SRC += ./lib/callum.c
