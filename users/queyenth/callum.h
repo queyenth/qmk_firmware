@@ -2,20 +2,21 @@
 
 #include QMK_KEYBOARD_H
 
-#define OS_INIT(mod, trigger) {os_up_unqueued, (mod), (trigger)}
+#define OS_INIT(mod, trigger) {(trigger), (mod), os_up_unqueued}
 
 // Represents the four states a oneshot key can be in
 typedef enum {
     os_up_unqueued,
     os_up_queued,
+    os_up_done,
     os_down_unused,
     os_down_used,
 } oneshot_state;
 
 typedef struct {
-  oneshot_state state;
-  uint16_t mod;
   uint16_t trigger;
+  uint8_t mod; // we use register_code/unregister_code, which expects uint8_t
+  oneshot_state state;
 } oneshot_t;
 
 // Custom oneshot mod implementation that doesn't rely on timers. If a mod is
