@@ -51,10 +51,15 @@
 #define POMODORO_UPDATE_TIMER 2000 // Every 2 seconds.
 #endif
 
+#define POMODORO_MANUAL_WORK
+#define POMODORO_MANUAL_REST
+
 typedef enum {
   stopped,
   work,
-  rest
+  rest,
+  wait_work,
+  wait_rest
 } pomodoro_state;
 
 typedef union {
@@ -66,7 +71,7 @@ typedef union {
 } pomodoro_config_t;
 
 void eeprom_pomodoro(void);
-void update_pomodoro(void);
+void update_pomodoro(uint8_t y);
 bool process_pomodoro(uint16_t startKeycode, uint16_t incKeycode, uint16_t keycode, keyrecord_t *record);
 
 #endif // POMODORO_ENABLE

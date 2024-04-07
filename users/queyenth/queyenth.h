@@ -6,13 +6,6 @@
 #define LA_SYM MO(_SYM)
 #define LA_NAV MO(_NAV)
 
-#ifdef RAW_ENABLE
-enum raw_hid_funcs {
-  RAW_HID_ONESHOT_SEND = 0,
-  RAW_HID_LAYOUT_RECV,
-};
-#endif
-
 enum layer_number {
   _CANARY = 0,
   _QWERTY,
@@ -21,6 +14,11 @@ enum layer_number {
   _FN,
 };
 
+typedef enum {
+  _NUMWORD = 0,
+  _MOUSEWORD
+} smart_layer_number;
+
 enum keycodes {
   OS_GUI = SAFE_RANGE,
   OS_ALT,
@@ -28,12 +26,15 @@ enum keycodes {
   OS_CTL,
   SW_LANG,
   NW_TOGG,
+  MW_TOGG,
   QQ_LAST
 };
 
 typedef struct {
   uint16_t key;
-  uint16_t num;
-} numword_t; // 2 bytes per sub. Find something better. Maybe just save diff between two keys in an int16_t or something
+  uint16_t sub;
+} smartlayer_sub_t; // 4 bytes per sub. Find something better.
 
+uint8_t get_active_layout(void);
+bool is_smartlayer_on(smart_layer_number smart_layer);
 bool process_record_user_queyenth(uint16_t keycode, keyrecord_t *record);

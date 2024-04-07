@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPLIT_USB_DETECT
 #define SPLIT_OLED_ENABLE
 
+//#define NO_ACTION_TAPPING
 //#define QUICK_TAP_TERM 0
 #define TAPPING_TERM 175
 

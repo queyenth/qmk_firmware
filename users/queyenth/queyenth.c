@@ -32,40 +32,73 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
   }
 }
 
-static const numword_t NUMWORD_TABLE[] = {
-  {KC_F, KC_7},
-  {KC_O, KC_8},
-  {KC_U, KC_9},
-  {KC_N, KC_4},
-  {KC_E, KC_5},
-  {KC_I, KC_6},
-  {KC_H, KC_1},
-  {KC_UNDS, KC_2},
-  {KC_COMM, KC_3},
-  {KC_X, KC_0},
-  {KC_G, KC_EQL},
-  {KC_S, KC_MINS},
-  {KC_R, KC_PLUS},
-  {KC_D, KC_DLR},
-  {KC_K, KC_PERC},
-  {KC_W, KC_SLSH},
-  {KC_Z, KC_LT},
-  {KC_M, KC_GT},
+static const smartlayer_sub_t NUMWORD_TABLE[] = {
+  {KC_C, KC_1},
+  {KC_R, KC_2},
+  {KC_S, KC_3},
+  {KC_T, KC_4},
+  {KC_G, KC_5},
+  {KC_M, KC_6},
+  {KC_N, KC_7},
+  {KC_E, KC_8},
+  {KC_I, KC_9},
+  {KC_A, KC_0},
 };
 static const size_t numwordLength = sizeof(NUMWORD_TABLE) / sizeof(NUMWORD_TABLE[0]);
+
+static const smartlayer_sub_t MOUSEWORD_TABLE[] = {
+  {KC_M, KC_MS_L},
+  {KC_N, KC_MS_D},
+  {KC_E, KC_MS_U},
+  {KC_I, KC_MS_R},
+  {KC_F, KC_BTN1},
+  {KC_O, KC_BTN2},
+  {KC_U, KC_BTN3},
+  {KC_H, KC_WH_D},
+  {KC_SLSH, KC_WH_U},
+};
+static const size_t mousewordLength = sizeof(MOUSEWORD_TABLE) / sizeof(MOUSEWORD_TABLE[0]);
 
 layer_state_t layer_state_set_user(layer_state_t state) {
   state = update_tri_layer_state(state, _NAV, _SYM, _FN);
   return state;
 }
 
-static uint8_t langCount = _QWERTY+1;
-static uint8_t lang = _CANARY;
+static uint8_t layoutCount = _QWERTY+1;
+static uint8_t layoutActive = _CANARY;
+
+uint8_t get_active_layout(void)
+{
+  return layoutActive;
+}
+
 static bool numwordStatus = false;
+static bool mousewordStatus = false;
+
+bool is_smartlayer_on(smart_layer_number smart_layer)
+{
+  switch (smart_layer) {
+  case _NUMWORD:
+    return numwordStatus;
+  case _MOUSEWORD:
+    return mousewordStatus;
+  }
+
+  return false;
+}
+
+uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods)
+{
+  switch (keycode) {
+  case KC_MINS:
+  case KC_EQL: return KC_GT;
+  }
+
+  return KC_TRNS;
+}
 
 bool process_record_user_queyenth(uint16_t keycode, keyrecord_t *record)
 {
-   
   static uint16_t registered_keycode = KC_NO;
 
   if (registered_keycode != KC_NO) {
@@ -77,51 +110,66 @@ bool process_record_user_queyenth(uint16_t keycode, keyrecord_t *record)
     update_oneshot(&oneshots[i], keycode, record);
   }
 
-  if (record->event.pressed && numwordStatus) {
-    bool found = false;
-    for (size_t i = 0; i < numwordLength; i++) {
-      if (keycode == NUMWORD_TABLE[i].key) {
-	registered_keycode = NUMWORD_TABLE[i].num;
-	found = true;
-	break;
-      }
-    }
-
-    if (!found) {
-      numwordStatus = false;
-    }
-  }
-
   const uint8_t mods = get_mods();
-  const bool isShifted = mods & MOD_MASK_SHIFT;
+  const bool isShiftedAndCanary = layoutActive == _CANARY && (mods & MOD_MASK_SHIFT);
   switch (keycode) {
   case SW_LANG:
     if (record->event.pressed) {
-      lang = (lang + 1) % langCount;
-      default_layer_set(1UL << lang);
-      //switch_input_lang_next(langConfig, langConfigCount);
+      layoutActive= (layoutActive + 1) % layoutCount;
+      default_layer_set(1UL << layoutActive);
     }
     return false;
+  case KC_COMM:
+    if (isShiftedAndCanary && record->event.pressed) {
+      registered_keycode = KC_SCLN;
+    }
+    break;
+  case KC_DOT:
+    if (isShiftedAndCanary && record->event.pressed) {
+      registered_keycode = KC_COLN;
+    }
+    break;
+  case KC_LT:
+    if (isShiftedAndCanary && record->event.pressed) {
+      registered_keycode = KC_GT;
+    }
+    break;
   case NW_TOGG:
     if (record->event.pressed) {
       numwordStatus = !numwordStatus;
     }
     return false;
-  case KC_DOT:
-    if (isShifted && record->event.pressed) {
-      registered_keycode = KC_COLN;
+  case MW_TOGG:
+    if (record->event.pressed) {
+      mousewordStatus = !mousewordStatus;
     }
-    break;
-  case KC_COMM:
-    if (isShifted && record->event.pressed) {
-      registered_keycode = KC_SCLN;
+    return false;
+  }
+
+  if (record->event.pressed && numwordStatus) {
+    bool found = false;
+    for (size_t i = 0; i < numwordLength; i++) {
+      if (keycode == NUMWORD_TABLE[i].key) {
+	registered_keycode = NUMWORD_TABLE[i].sub;
+	found = true;
+	break;
+      }
     }
-    break;
-  case KC_UNDS:
-    if (isShifted && record->event.pressed) {
-      registered_keycode = KC_SLSH;
+
+    numwordStatus = found;
+  }
+
+  if (record->event.pressed && mousewordStatus) {
+    bool found = false;
+    for (size_t i = 0; i < mousewordLength; i++) {
+      if (keycode == MOUSEWORD_TABLE[i].key) {
+	registered_keycode = MOUSEWORD_TABLE[i].sub;
+	found = true;
+	break;
+      }
     }
-    break;
+
+    mousewordStatus = found;
   }
 
   if (registered_keycode != KC_NO) {
