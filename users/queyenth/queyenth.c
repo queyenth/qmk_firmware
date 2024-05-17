@@ -1,10 +1,10 @@
 #include "queyenth.h"
 
 static oneshot_t oneshots[] = {
-  OS_INIT(KC_LGUI, OS_GUI),
-  OS_INIT(KC_LALT, OS_ALT),
-  OS_INIT(KC_LSFT, OS_SFT),
-  OS_INIT(KC_LCTL, OS_CTL),
+  OS_INIT(OS_GUI, oneshot_gui_callback),
+  OS_INIT(OS_ALT, oneshot_alt_callback),
+  OS_INIT(OS_SFT, oneshot_shift_callback),
+  OS_INIT(OS_CTL, oneshot_ctrl_callback),
 };
 static const size_t oneshot_length = sizeof(oneshots) / sizeof(oneshots[0]);
 
@@ -105,12 +105,13 @@ bool process_record_user_queyenth(uint16_t keycode, keyrecord_t *record)
     unregister_code16(registered_keycode);
     registered_keycode = KC_NO;
   }
-  
+
   for (size_t i = 0; i < oneshot_length; i++) {
     update_oneshot(&oneshots[i], keycode, record);
   }
 
   const uint8_t mods = get_mods();
+  // if emx status active, then do stuff.
   const bool isShiftedAndCanary = layoutActive == _CANARY && (mods & MOD_MASK_SHIFT);
   switch (keycode) {
   case SW_LANG:

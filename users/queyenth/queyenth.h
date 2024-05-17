@@ -2,16 +2,18 @@
 
 #include QMK_KEYBOARD_H
 #include "callum.h"
+#include "keymap_russian.h"
 
 #define LA_SYM MO(_SYM)
 #define LA_NAV MO(_NAV)
 
 enum layer_number {
   _CANARY = 0,
+  _YAKO,
   _QWERTY,
   _NAV,
   _SYM,
-  _FN,
+  _FN
 };
 
 typedef enum {

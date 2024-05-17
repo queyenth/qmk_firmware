@@ -7,10 +7,14 @@
 // From user space
 #include "queyenth.h"
 
+#define QQ_HYPR KC_APP
+
 enum keycodes_lily {
   // pomodoro keys
   POM_ST = QQ_LAST, // start/stop
   POM_INC, // Increase time
+  QQ_ARR1, // ->
+  QQ_ARR2 // =>
 };
 
 void keyboard_post_init_user(void) {
@@ -22,18 +26,25 @@ void keyboard_post_init_user(void) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_CANARY] = LAYOUT(
-  KC_ESC,  KC_1, KC_2, KC_3,   KC_4,   KC_5,                    KC_6,   KC_7,    KC_8,    KC_9,    KC_0,    KC_MUTE,
-  KC_LBRC, KC_W, KC_L, KC_Y,   KC_P,   KC_B,                    KC_Z,   KC_F,    KC_O,    KC_U,    KC_QUOT, KC_RBRC,
-  KC_LCTL, KC_C, KC_R, KC_S,   KC_T,   KC_G,                    KC_M,   KC_N,    KC_E,    KC_I,    KC_A,    KC_RCTL,
-  KC_LALT, KC_Q, KC_J, KC_V,   KC_D,   KC_K,   KC_TAB, KC_ENT,  KC_X,   KC_H,    KC_SLSH, KC_COMM, KC_DOT,  KC_APP,
-                       POM_ST, QK_REP, LA_NAV, KC_SPC, KC_LSFT, LA_SYM, QK_AREP, POM_INC
+  KC_ESC,  KC_1, KC_2, KC_3,   KC_4,    KC_5,                     KC_6,   KC_7,    KC_8,    KC_9,    KC_0,    KC_MUTE,
+  QK_REP,  KC_W, KC_L, KC_Y,   KC_P,    KC_B,                     KC_Z,   KC_F,    KC_O,    KC_U,    KC_QUOT, QK_AREP,
+  KC_LCTL, KC_C, KC_R, KC_S,   KC_T,    KC_G,                     KC_M,   KC_N,    KC_E,    KC_I,    KC_A,    KC_RCTL,
+  KC_LALT, KC_Q, KC_J, KC_V,   KC_D,    KC_K,   QQ_ARR1, QQ_ARR2, KC_X,   KC_H,    KC_SLSH, KC_COMM, KC_DOT,  KC_RALT,
+                       POM_ST, QQ_HYPR, LA_NAV, KC_SPC,  KC_LSFT, LA_SYM, KC_LGUI, POM_INC
+),
+[_YAKO] = LAYOUT(
+  KC_ESC,  KC_1,   KC_2,  KC_3,   KC_4,   KC_5,                    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   RU_HARD,
+  RU_EF,   RU_ZHE, RU_HA, RU_ER,  RU_BE,  RU_TSE,                  RU_SHCH, RU_GHE,  RU_A,    RU_YERU, RU_E,   RU_YU,
+  KC_LCTL, RU_ES,  RU_TE, RU_EN,  RU_VE,  RU_EM,                   RU_YA,   RU_KA,   RU_O,    RU_I,    RU_IE,  KC_RCTL,
+  KC_LALT, RU_SHA, RU_ZE, RU_EL,  RU_DE,  RU_CHE, KC_TAB, KC_ENT,  RU_SHTI, RU_PE,   RU_SOFT, RU_U,    RU_DOT, KC_APP,
+                          POM_ST, QK_REP, LA_NAV, KC_SPC, KC_LSFT, LA_SYM,  QK_AREP, POM_INC
 ),
 [_QWERTY] = LAYOUT(
   KC_ESC,  KC_1, KC_2, KC_3,   KC_4,   KC_5,                    KC_6,   KC_7,    KC_8,    KC_9,   KC_0,    KC_QUOT,
-  KC_LBRC, KC_Q, KC_W, KC_E,   KC_R,   KC_T,                    KC_Y,   KC_U,    KC_I,    KC_O,   KC_P,    KC_RBRC,
+  QK_REP,  KC_Q, KC_W, KC_E,   KC_R,   KC_T,                    KC_Y,   KC_U,    KC_I,    KC_O,   KC_P,    QK_AREP,
   KC_LCTL, KC_A, KC_S, KC_D,   KC_F,   KC_G,                    KC_H,   KC_J,    KC_K,    KC_L,   KC_SCLN, KC_RCTL,
   KC_LALT, KC_Z, KC_X, KC_C,   KC_V,   KC_B,   KC_TAB, KC_ENT,  KC_N,   KC_M,    KC_COMM, KC_DOT, KC_SLSH, KC_APP,
-                       POM_ST, QK_REP, LA_NAV, KC_SPC, KC_LSFT, LA_SYM, QK_AREP, POM_INC
+                       POM_ST, KC_TAB, LA_NAV, KC_SPC, KC_LSFT, LA_SYM, KC_ENT,  POM_INC
 ),
 [_NAV] = LAYOUT(
   _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
@@ -55,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, OS_GUI,  OS_ALT,  OS_SFT,  OS_CTL,  KC_F11,                    KC_F12,  OS_CTL,  OS_SFT,  OS_ALT,  OS_GUI,  _______,
   _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   _______, _______, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______,
                              _______, _______, _______, _______, QK_BOOT, _______, _______, _______
-)
+               ),
 };
 
 //SSD1306 OLED update loop, make sure to enable OLED_ENABLE=yes in rules.mk
@@ -110,6 +121,19 @@ bool oled_task_user(void) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (!process_record_user_queyenth(keycode, record)) {
+    return false;
+  }
+
+  switch (keycode) {
+  case QQ_ARR1:
+    if (record->event.pressed) {
+      SEND_STRING("->");
+    }
+    return false;
+  case QQ_ARR2:
+    if (record->event.pressed) {
+      SEND_STRING("=>");
+    }
     return false;
   }
 

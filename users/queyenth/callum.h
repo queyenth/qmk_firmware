@@ -2,7 +2,7 @@
 
 #include QMK_KEYBOARD_H
 
-#define OS_INIT(mod, trigger) {(trigger), (mod), os_up_unqueued}
+#define OS_INIT(trigger, callback) {(trigger), os_up_unqueued, callback}
 
 // Represents the four states a oneshot key can be in
 typedef enum {
@@ -15,8 +15,8 @@ typedef enum {
 
 typedef struct {
   uint16_t trigger;
-  uint8_t mod; // we use register_code/unregister_code, which expects uint8_t
   oneshot_state state;
+  void (*callback)(bool, uint16_t);
 } oneshot_t;
 
 // Custom oneshot mod implementation that doesn't rely on timers. If a mod is
@@ -36,3 +36,9 @@ bool is_oneshot_cancel_key(uint16_t keycode);
 // change keys allows stacking multiple oneshot modifiers, and carrying them
 // between layers.
 bool is_oneshot_ignored_key(uint16_t keycode);
+
+// Ctrl/Alt/Gui/Shift callbacks.
+void oneshot_ctrl_callback(bool status, uint16_t trigger); 
+void oneshot_alt_callback(bool status, uint16_t trigger);
+void oneshot_gui_callback(bool status, uint16_t trigger);
+void oneshot_shift_callback(bool status, uint16_t trigger);
