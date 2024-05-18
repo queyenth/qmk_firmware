@@ -248,7 +248,7 @@ void update_pomodoro(uint8_t y) {
 #else
       start_pomodoro(rest);
 #endif
-      draw_by_animation(POMODORO_STEPS, pomodoroStatus == work); // draw the whole thing before switching to rest
+      draw_by_animation(POMODORO_STEPS, true); // draw the whole thing before switching to rest
     }
     break;
   case rest:
@@ -286,7 +286,7 @@ void update_pomodoro(uint8_t y) {
     }
     const uint8_t seconds = (pomodoroLeft - (POMODORO_MINUTE * minutes)) / 1000;
     snprintf(pomodoroTimerString, sizeof(pomodoroTimerString), "%02d:%02d", minutes, seconds);
-    lastTimerUpdateTimer = timer_elapsed32(lastTimerUpdateTimer);
+    lastTimerUpdateTimer = timer_read32();
   }
   render_pomodoro(y);
 }
