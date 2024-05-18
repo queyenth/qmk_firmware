@@ -48,7 +48,7 @@
 #endif
 
 #ifndef POMODORO_UPDATE_TIMER
-#define POMODORO_UPDATE_TIMER 2000 // Every 2 seconds.
+#define POMODORO_UPDATE_TIMER 1000 // Every second.
 #endif
 
 #define POMODORO_MANUAL_WORK
